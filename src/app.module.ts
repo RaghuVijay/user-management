@@ -11,11 +11,6 @@ import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import environmentValidatation from './config/environment.validatation';
 import { MallsModule } from './mall/malls.module';
-import jwtConfig from './auth/config/jwt.config';
-import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD } from '@nestjs/core';
-import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
-import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 
 const ENV = process.env.NODE_ENV;
 
@@ -42,19 +37,10 @@ const ENV = process.env.NODE_ENV;
         database: configService.get('database.name'),
       }),
     }),
-    ConfigModule.forFeature(jwtConfig),
-    JwtModule.registerAsync(jwtConfig.asProvider()),
     UsersModule,
     MallsModule,
   ],
   controllers: [AppController, AuthController, UsersController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthenticationGuard,
-    },
-    AccessTokenGuard,
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
