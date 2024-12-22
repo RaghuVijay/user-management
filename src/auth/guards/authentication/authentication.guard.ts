@@ -7,22 +7,22 @@ import {
 
 import { AUTH_TYPE_KEY } from 'src/auth/decorators/auth.decorator';
 import { AccessTokenGuard } from '../access-token/access-token.guard';
-import { AuthTypeEnum } from 'src/auth/enums/auth-type.enum';
+import { AuthType } from 'src/auth/enums/auth-type.enum';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
   // Set the default Auth Type
-  private static readonly defaultAuthType = AuthTypeEnum.Bearer;
+  private static readonly defaultAuthType = AuthType.Bearer;
 
   // Create authTypeGuardMap
   private readonly authTypeGuardMap: Record<
-    AuthTypeEnum,
+    AuthType,
     CanActivate | CanActivate[]
   > = {
-    [AuthTypeEnum.Bearer]: this.accessTokenGuard,
-    [AuthTypeEnum.None]: { canActivate: () => true },
+    [AuthType.Bearer]: this.accessTokenGuard,
+    [AuthType.None]: { canActivate: () => true },
   };
 
   constructor(
@@ -31,7 +31,7 @@ export class AuthenticationGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const authTypes = this.reflector.getAllAndOverride<AuthTypeEnum[]>(
+    const authTypes = this.reflector.getAllAndOverride<AuthType[]>(
       AUTH_TYPE_KEY,
       [context.getHandler(), context.getClass()],
     ) ?? [AuthenticationGuard.defaultAuthType];

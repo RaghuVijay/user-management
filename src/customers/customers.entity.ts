@@ -1,18 +1,21 @@
-import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { AuthType } from './enums/authType';
+import { gender } from './enums/gendre';
+import { Malls } from 'src/mall/mall.entity';
 
-@Entity({ name: 'creds' }) // Explicit table name mapping
-@Unique(['code']) // Ensures the 'code' column is unique
-export class Creds {
+@Entity('customers')
+@Unique(['code'])
+export class Customers {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,20 +23,38 @@ export class Creds {
     type: 'varchar',
     length: 10, // Matches the 'VARCHAR(10)' constraint from your SQL
     nullable: false,
+    unique: true, // Additional safety to ensure uniqueness at the DB level
+    default: () => "'CUST' || TO_CHAR(NEXTVAL('cred_seq'), 'FM0000')", // SQL default generation
+    insert: false,
   })
   code: string;
 
   @Column({
     type: 'varchar',
+    length: 95,
     nullable: false,
   })
-  email: string;
+  name: string;
 
   @Column({
     type: 'varchar',
+    length: 1024,
+    nullable: true,
+  })
+  profile_pic?: string;
+
+  @Column({
+    type: 'date',
     nullable: false,
   })
-  password: string; // Only one @Column decorator for the password field
+  dob: Date;
+
+  @Column({
+    type: 'enum',
+    enum: gender,
+    nullable: false,
+  })
+  gender: gender;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' }) // Timestamp column for creation
   createdAt: Date;
@@ -43,11 +64,4 @@ export class Creds {
 
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true }) // Nullable for soft deletes
   deletedAt?: Date;
-
-  @Column({
-    type: 'enum',
-    enum: AuthType,
-    nullable: false,
-  })
-  type: AuthType;
 }

@@ -33,7 +33,7 @@ export class GenerateTokensProvider {
     const [accessToken, refreshToken] = await Promise.all([
       // Generate Access Token with Email
       this.signToken<Partial<ActiveUserData>>(
-        user.id,
+        user.code,
         this.jwtConfiguration.accessTokenTtl,
         { email: user.email },
       ),

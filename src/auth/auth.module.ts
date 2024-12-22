@@ -13,6 +13,8 @@ import { FindOneByEmailProvider } from './providers/find-one-by-email.provider';
 import { SignInProvider } from './providers/sign-in.provider';
 import { RefreshTokensProvider } from './providers/refresh-tokens.provider';
 import { FindOneByIdProvider } from './providers/find-one-by-id.provider';
+import { CustomersModule } from 'src/customers/customers.module';
+import { ChangePasswordProvider } from './providers/change-password.provider';
 
 @Module({
   providers: [
@@ -26,9 +28,11 @@ import { FindOneByIdProvider } from './providers/find-one-by-id.provider';
     SignInProvider,
     RefreshTokensProvider,
     FindOneByIdProvider,
+    ChangePasswordProvider,
   ],
   imports: [
     forwardRef(() => UsersModule),
+    forwardRef(() => CustomersModule),
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     TypeOrmModule.forFeature([Creds]),
