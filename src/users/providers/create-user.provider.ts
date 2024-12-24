@@ -35,7 +35,6 @@ export class CreateUserProvider {
         where: { email: userDto.email },
       });
     } catch (error) {
-      console.log(error);
       throw new RequestTimeoutException(
         'unable to process the request at the moment please try again later ',
         {

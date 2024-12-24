@@ -5,19 +5,17 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { gender } from './enums/gendre';
-import { Malls } from 'src/mall/mall.entity';
-import { Vehicles } from 'src/vehicles/vehicles.entity';
+import { VehicleType } from './enums/Vehicle-type.enum';
+import { Customers } from 'src/customers/customers.entity';
 
-@Entity('customers')
+@Entity('vehicle_info')
 @Unique(['code'])
-export class Customers {
+export class Vehicles {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -26,7 +24,7 @@ export class Customers {
     length: 10, // Matches the 'VARCHAR(10)' constraint from your SQL
     nullable: false,
     unique: true, // Additional safety to ensure uniqueness at the DB level
-    default: () => "'CUST' || TO_CHAR(NEXTVAL('cred_seq'), 'FM0000')", // SQL default generation
+    default: () => "'VEH' || TO_CHAR(NEXTVAL('vehicle_seq'), 'FM0000')", // SQL default generation
     insert: false,
   })
   code: string;
@@ -36,27 +34,20 @@ export class Customers {
     length: 95,
     nullable: false,
   })
-  name: string;
-
-  @Column({
-    type: 'varchar',
-    length: 1024,
-    nullable: true,
-  })
-  profile_pic?: string;
-
-  @Column({
-    type: 'date',
-    nullable: false,
-  })
-  dob: Date;
+  registration: string;
 
   @Column({
     type: 'enum',
-    enum: gender,
+    enum: VehicleType,
     nullable: false,
   })
-  gender: gender;
+  type: VehicleType;
+
+  @ManyToOne(() => Customers, (customer) => customer.code, {
+    nullable: false,
+  })
+  @JoinColumn({ name: 'customer_code', referencedColumnName: 'code' }) // Foreign key relationship
+  customer_code: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' }) // Timestamp column for creation
   createdAt: Date;

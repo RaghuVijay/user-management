@@ -17,6 +17,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { CustomersModule } from './customers/customers.module';
+import { VehiclesModule } from './vehicles/vehicles.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -49,6 +50,7 @@ const ENV = process.env.NODE_ENV;
     UsersModule,
     MallsModule,
     CustomersModule,
+    VehiclesModule,
   ],
   controllers: [AppController, AuthController, UsersController],
   providers: [
