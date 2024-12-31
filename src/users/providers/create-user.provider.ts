@@ -13,6 +13,7 @@ import { HashingProvider } from 'src/auth/providers/hashing.provider';
 import { Creds } from 'src/auth/auth.entity';
 import { convertDate } from '../utils/dateConverter';
 import { Signup } from '../dtos/signup.dto';
+import { GetMallCodeProviders } from './get-mall_code.providers';
 
 @Injectable()
 export class CreateUserProvider {
@@ -25,6 +26,8 @@ export class CreateUserProvider {
 
     @InjectRepository(Creds)
     private credRepository: Repository<Creds>,
+
+    private readonly mall_codeProvider: GetMallCodeProviders,
   ) {}
 
   public async createUser(userDto: Signup) {

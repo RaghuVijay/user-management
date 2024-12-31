@@ -12,7 +12,6 @@ import {
 } from 'typeorm';
 import { gender } from './enums/gender';
 import { Malls } from 'src/mall/mall.entity';
-import { Creds } from 'src/auth/auth.entity';
 
 @Entity()
 @Unique(['code'])
@@ -44,8 +43,11 @@ export class users {
   })
   profile_pic?: string;
 
-  @ManyToOne(() => Malls, (mall) => mall.code, { nullable: false })
-  @JoinColumn({ name: 'mall_code', referencedColumnName: 'code' })
+  @Column({
+    type: 'varchar',
+    length: 10,
+    nullable: false,
+  })
   mall_code: string;
 
   // @OneToOne(() => Creds, (cred) => cred.code)

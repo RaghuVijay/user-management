@@ -6,7 +6,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Creds } from '../auth.entity';
-import { when } from 'joi';
 import { error } from 'console';
 
 @Injectable()

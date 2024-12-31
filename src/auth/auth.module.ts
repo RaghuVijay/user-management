@@ -36,6 +36,7 @@ import { ChangePasswordProvider } from './providers/change-password.provider';
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     TypeOrmModule.forFeature([Creds]),
+    UsersModule,
   ],
   exports: [AuthService, HashingProvider, TypeOrmModule],
 })

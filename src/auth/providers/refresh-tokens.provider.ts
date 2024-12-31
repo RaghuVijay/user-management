@@ -7,6 +7,10 @@ import { GenerateTokensProvider } from './generate-token.provider';
 import { RefreshToken } from '../dtos/refreshToken.dto';
 import { ActiveUserData } from '../interface/active-user-data.interface';
 import { FindOneByIdProvider } from './find-one-by-id.provider';
+import { users } from 'src/users/users.entity';
+import { Customers } from 'src/customers/customers.entity';
+import { Creds } from '../auth.entity';
+import { GetUserByIdProvider } from 'src/users/providers/get-user-by-id.provider';
 
 @Injectable()
 export class RefreshTokensProvider {
@@ -19,6 +23,8 @@ export class RefreshTokensProvider {
     private readonly generateTokensProvider: GenerateTokensProvider,
 
     private readonly findOneByID: FindOneByIdProvider,
+
+    private readonly findUserByID: GetUserByIdProvider,
   ) {}
 
   public async refreshTokens(refreshTokenDto: RefreshToken) {
@@ -30,9 +36,12 @@ export class RefreshTokensProvider {
         audience: this.jwtConfiguration.audience,
         issuer: this.jwtConfiguration.issuer,
       });
-      const user = await this.findOneByID.findOneById(sub);
+      const user: Creds = await this.findOneByID.findOneById(sub);
+      const userCode: users | users[] = await this.findUserByID.getUsers(
+        user.code,
+      );
 
-      return await this.generateTokensProvider.generateTokens(user);
+      return await this.generateTokensProvider.generateTokens(user, userCode);
     } catch (error) {
       throw new UnauthorizedException(error);
     }
