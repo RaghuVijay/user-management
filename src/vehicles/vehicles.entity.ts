@@ -43,10 +43,11 @@ export class Vehicles {
   })
   type: VehicleType;
 
-  @ManyToOne(() => Customers, (customer) => customer.code, {
+  @Column({
+    type: 'varchar',
+    length: 10,
     nullable: false,
   })
-  @JoinColumn({ name: 'customer_code', referencedColumnName: 'code' }) // Foreign key relationship
   customer_code: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' }) // Timestamp column for creation
