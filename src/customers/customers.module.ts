@@ -21,7 +21,12 @@ import { DeletecustomersProvider } from './providers/delete-user.provider';
     UpdatecustomersProvider,
     DeletecustomersProvider,
   ],
-  exports: [CustomersService, CreateCustomerProvider],
+  exports: [
+    CustomersService,
+    CreateCustomerProvider,
+    TypeOrmModule,
+    GetCustomerByIdProvider,
+  ],
   controllers: [CustomersController],
 })
 export class CustomersModule {}

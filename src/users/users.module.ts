@@ -10,6 +10,7 @@ import { UpdateUserDataProvider } from './providers/update-user-data.provider';
 import { DeleteUserProvider } from './providers/delete-user.provider';
 import { GetMallCodeProviders } from './providers/get-mall_code.providers';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { HttpModule } from '@nestjs/axios';
     TypeOrmModule.forFeature([users]),
     CustomersModule,
     HttpModule,
+    ConfigModule,
   ],
   exports: [UserService, GetUserByIdProvider],
   providers: [

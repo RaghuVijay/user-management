@@ -35,6 +35,7 @@ export class UsersController {
     @Body() userDto: Signup | customerSignup,
     @Param('type') type: Type,
   ) {
+    console.log(type);
     if (type === Type.user) {
       return this.userService.createUser(userDto as Signup);
     } else if (type === Type.customer) {

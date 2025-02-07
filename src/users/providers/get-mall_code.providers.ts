@@ -1,12 +1,19 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class GetMallCodeProviders {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {}
+
   public async getMallCode(name?: string, location?: string) {
-    let mallDetailsUrl: `http://localhost:3001/malls/search`;
+    const adminUrl = this.configService.get('appConfig.adminUrl');
+    const mallDetailsUrl = `${adminUrl}/malls/search`; // Now this is correct
+
     try {
       const response = await lastValueFrom(
         this.httpService.get(mallDetailsUrl, { params: { name, location } }),

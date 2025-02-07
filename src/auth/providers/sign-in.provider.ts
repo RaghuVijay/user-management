@@ -10,6 +10,7 @@ import { HashingProvider } from './hashing.provider';
 import { GenerateTokensProvider } from './generate-token.provider';
 import { users } from 'src/users/users.entity';
 import { GetUserByIdProvider } from 'src/users/providers/get-user-by-id.provider';
+import { GetCustomerByIdProvider } from 'src/customers/providers/get-customer-by-id.provider';
 
 @Injectable()
 export class SignInProvider {
@@ -21,6 +22,8 @@ export class SignInProvider {
     private readonly generateTokenProvider: GenerateTokensProvider,
 
     private readonly getUserById: GetUserByIdProvider,
+
+    private readonly getCustomerByID: GetCustomerByIdProvider,
   ) {}
 
   public async signIn(signInDto: SignInDto) {
@@ -40,7 +43,24 @@ export class SignInProvider {
       throw new UnauthorizedException('Password do not match');
     }
 
-    let mallCode = await this.getUserById.getUsers(user.code);
+    let mallCode: any;
+    //   (await this.getUserById.getUsers(user.code)) ||
+    //   (await this.getCustomerByID.getCustomers(user.code));
+    const [userResult, customerResult] = await Promise.allSettled([
+      this.getUserById.getUsers(user.code),
+      this.getCustomerByID.getCustomers(user.code),
+    ]);
+    if (userResult.status === 'fulfilled') {
+      mallCode = userResult.value;
+    } else if (customerResult.status === 'fulfilled') {
+      mallCode = customerResult.value;
+    } else {
+      console.error(
+        'Both requests failed:',
+        userResult.reason,
+        customerResult.reason,
+      );
+    }
     return this.generateTokenProvider.generateTokens(user, mallCode);
   }
 }
